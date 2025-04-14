@@ -6,9 +6,10 @@
 // Sets default values
 ACharacter_Car::ACharacter_Car()
 {
-
-	/*
-	//Create the Chasis
+/*
+	PrimaryActorTick.bCanEverTick = true;
+	
+	//Create the Chassis
 	Chassis = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CarBody"));
 	RootComponent = Chassis;
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> BodyMesh(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
@@ -18,19 +19,17 @@ ACharacter_Car::ACharacter_Car()
 	
 	//Initialize Front Left Wheel
 	FL_Wheel = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FrontLeftWheel"));
-
-
 	if (WheelMesh.Succeeded()) {FL_Wheel->SetStaticMesh((WheelMesh.Object));}
 
 	FL_Wheel->SetupAttachment(Chassis);
 	FL_Wheel->SetRelativeLocation(FVector(50.0f,-50.0f, -30.0f));
 	FR_Wheel->SetRelativeRotation(FRotator(90.0f,0.0f,0.0f));
 
-	FL_Wheel->SetSimulatePhysics((true));
-	FL_Wheel->SetCollisionEnabled((ECollisionEnabled::QueryAndPhysics));
+	//FL_Wheel->SetSimulatePhysics((true));
+	//FL_Wheel->SetCollisionEnabled((ECollisionEnabled::QueryAndPhysics));
 
-	FL_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("FrontLeftConstraint"));
-	FL_Constraint ->SetConstrainedComponents(Chassis, NAME_None, FL_Wheel, NAME_None);
+	//FL_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("FrontLeftConstraint"));
+	//FL_Constraint ->SetConstrainedComponents(Chassis, NAME_None, FL_Wheel, NAME_None);
 
 	
 	//Initialize Front Right Wheel
@@ -41,11 +40,11 @@ ACharacter_Car::ACharacter_Car()
 	FR_Wheel->SetRelativeLocation(FVector(50.0f,50.0f, -30.0f));
 	FR_Wheel->SetRelativeRotation(FRotator(90.0f,0.0f,0.0f));
 
-	FR_Wheel->SetSimulatePhysics((true));
-	FR_Wheel->SetCollisionEnabled((ECollisionEnabled::QueryAndPhysics));
+	//FR_Wheel->SetSimulatePhysics((true));
+	//FR_Wheel->SetCollisionEnabled((ECollisionEnabled::QueryAndPhysics));
 
-	FR_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("FrontRightConstraint"));
-	FR_Constraint ->SetConstrainedComponents(Chassis, NAME_None, FR_Wheel, NAME_None);
+	//FR_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("FrontRightConstraint"));
+	//FR_Constraint ->SetConstrainedComponents(Chassis, NAME_None, FR_Wheel, NAME_None);
 
 	//Initialize Back Right Wheel
 	BR_Wheel = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BackRightWheel"));
@@ -55,11 +54,11 @@ ACharacter_Car::ACharacter_Car()
 	BR_Wheel->SetRelativeLocation(FVector(-50.0f,-50.0f, -30.0f));
 	BR_Wheel->SetRelativeRotation(FRotator(90.0f,0.0f,0.0f));
 
-	BR_Wheel->SetSimulatePhysics((true));
-	BR_Wheel->SetCollisionEnabled((ECollisionEnabled::QueryAndPhysics));
+	//BR_Wheel->SetSimulatePhysics((true));
+	//BR_Wheel->SetCollisionEnabled((ECollisionEnabled::QueryAndPhysics));
 
-	BR_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("BackRightConstraint"));
-	BR_Constraint ->SetConstrainedComponents(Chassis, NAME_None, BR_Wheel, NAME_None);
+	//BR_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("BackRightConstraint"));
+	//BR_Constraint ->SetConstrainedComponents(Chassis, NAME_None, BR_Wheel, NAME_None);
 
 	//Initialize Back Left Wheel
 	BL_Wheel = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BackLeftWheel"));
@@ -69,13 +68,13 @@ ACharacter_Car::ACharacter_Car()
 	BL_Wheel->SetRelativeLocation(FVector(-50.0f,50.0f, -30.0f));
 	BL_Wheel->SetRelativeRotation(FRotator(90.0f,0.0f,0.0f));
 
-	BL_Wheel->SetSimulatePhysics((true));
-	BL_Wheel->SetCollisionEnabled((ECollisionEnabled::QueryAndPhysics));
+	//BL_Wheel->SetSimulatePhysics((true));
+	//BL_Wheel->SetCollisionEnabled((ECollisionEnabled::QueryAndPhysics));
 
-	BL_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("BackLeftConstraint"));
-	BL_Constraint ->SetConstrainedComponents(Chassis, NAME_None, BL_Wheel, NAME_None);
-	*/
+	//BL_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("BackLeftConstraint"));
+	//BL_Constraint ->SetConstrainedComponents(Chassis, NAME_None, BL_Wheel, NAME_None);
 	
+	*/
 
 }
 
@@ -122,7 +121,7 @@ void ACharacter_Car::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//float RotationSpeed = GetInputAxisValue("MoveForward") * 100.0f;
+	float RotationSpeed = GetInputAxisValue("MoveForward") * 100.0f;
 	
 
 }
@@ -130,18 +129,10 @@ void ACharacter_Car::Tick(float DeltaTime)
 // Called to bind functionality to input
 void ACharacter_Car::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	//PlayerInputComponent->BindAxis("MoveForward", this, &ACharacter_Car::MoveForward);
+
 
 }
 
 
-void ACharacter_Car::MoveForward(float Value)
-{
 
-//	FVector Force = Chassis->GetForwardVector() * Value * 100000.0f;
-
-//	BL_Wheel->AddForce(Force);
-//	BR_Wheel->AddForce(Force);
-	
-}
 

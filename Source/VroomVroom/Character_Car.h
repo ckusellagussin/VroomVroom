@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Debug.h"
 #include "Character_Car.generated.h"
 
 UCLASS()
@@ -15,36 +17,6 @@ class VROOMVROOM_API ACharacter_Car : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ACharacter_Car();
-
-	//Chassis Setup
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UStaticMeshComponent* Chassis;
-
-	//Front Left Wheel Setup
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UStaticMeshComponent* FL_Wheel;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UPhysicsConstraintComponent* FL_Constraint;
-
-	//Front Right Wheel Setup
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UStaticMeshComponent* FR_Wheel;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UPhysicsConstraintComponent* FR_Constraint;
-
-	//Back Left Wheel Setup
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UStaticMeshComponent* BL_Wheel;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UPhysicsConstraintComponent* BL_Constraint;
-	
-	//Back Right Wheel Setup
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UStaticMeshComponent* BR_Wheel;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UPhysicsConstraintComponent* BR_Constraint;
-
-	void MoveForward(float Value);
 
 	
 	
