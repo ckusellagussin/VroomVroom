@@ -21,9 +21,11 @@ ACarPawn::ACarPawn()
 		Chassis->SetStaticMesh((BodyMesh.Object));
 		Chassis->SetWorldScale3D(FVector(2.0f));
 		Chassis->SetRelativeScale3D(FVector(2.0f,5.0f,2.0f));
+		Chassis->SetCollisionProfileName(TEXT("Vehicle"));
 		Chassis->SetSimulatePhysics(true);
 		Chassis->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		Chassis->SetVisibility(true);
+		Chassis->SetCenterOfMass(FVector(50,-50, 30));
 
 		static ConstructorHelpers::FObjectFinder<UStaticMesh> WheelMesh(TEXT("StaticMesh'/Engine/Content/BasicShapes/Cylinder.Cylinder'"));
 	}
@@ -39,7 +41,7 @@ ACarPawn::ACarPawn()
 	if (WheelMesh.Succeeded()) {FL_Wheel->SetStaticMesh((WheelMesh.Object));}
 
 	FL_Wheel->SetupAttachment(Chassis);
-	FL_Wheel->SetRelativeLocation(FVector(-55.5f,-40.0f, -40.0f));
+	FL_Wheel->SetRelativeLocation(FVector(-60.0f,-40.0f, -40.0f));
 	FL_Wheel->SetRelativeScale3D(FVector(0.6725f, 0.27f, 0.117f));
 	FL_Wheel->SetRelativeRotation(FRotator(90.0f,0.0f,0.0f));
 	
@@ -47,14 +49,22 @@ ACarPawn::ACarPawn()
 	FL_Wheel->SetCollisionEnabled((ECollisionEnabled::QueryAndPhysics));
 
 	FL_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("FrontLeftConstraint"));
-	FL_Constraint ->SetConstrainedComponents(Chassis, NAME_None, FL_Wheel, NAME_None);
+	FL_Constraint->SetupAttachment(Chassis);
+	FL_Constraint->SetConstrainedComponents(Chassis, NAME_None, FL_Wheel, NAME_None);
+	FL_Constraint->SetRelativeLocation(FVector(-45.0f,-40.0f,-40.0f));
+
+	FL_Constraint->SetLinearPositionDrive(true, true, true);
+	FL_Constraint->SetLinearDriveParams(500.0f, 50.0f,0.0f);
+	FL_Constraint->SetAngularSwing1Limit(ACM_Locked,0.0f);
+	FL_Constraint->SetAngularSwing2Limit(ACM_Free,0.0f);
+	FL_Constraint->SetAngularTwistLimit(ACM_Locked,0.0f);
 
 	//Initialize Front Right Wheel
 	FR_Wheel = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FrontRightWheel"));
 	if (WheelMesh.Succeeded()) {FR_Wheel->SetStaticMesh((WheelMesh.Object));}
 
 	FR_Wheel->SetupAttachment(Chassis);
-	FR_Wheel->SetRelativeLocation(FVector(55.0f,-40.0f, -40.0f));
+	FR_Wheel->SetRelativeLocation(FVector(60.0f,-40.0f, -40.0f));
 	FR_Wheel->SetRelativeScale3D(FVector(0.6725f, 0.27f, 0.117f));
 	FR_Wheel->SetRelativeRotation(FRotator(90.0f,0.0f,0.0f));
 
@@ -62,14 +72,22 @@ ACarPawn::ACarPawn()
 	FR_Wheel->SetCollisionEnabled((ECollisionEnabled::QueryAndPhysics));
 
 	FR_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("FrontRightConstraint"));
-	FR_Constraint ->SetConstrainedComponents(Chassis, NAME_None, FR_Wheel, NAME_None);
+	FR_Constraint->SetupAttachment(Chassis);
+	FR_Constraint->SetConstrainedComponents(Chassis, NAME_None, FR_Wheel, NAME_None);
+	FR_Constraint->SetRelativeLocation(FVector(50.0f,-40.0f, -40.0f));
+
+	FR_Constraint->SetLinearPositionDrive(true, true, true);
+	FR_Constraint->SetLinearDriveParams(500.0f, 50.0f,0.0f);
+	FR_Constraint->SetAngularSwing1Limit(ACM_Locked,0.0f);
+	FR_Constraint->SetAngularSwing2Limit(ACM_Free,0.0f);
+	FR_Constraint->SetAngularTwistLimit(ACM_Locked,0.0f);
 
 	//Initialize Back Right Wheel
 	BR_Wheel = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BackRightWheel"));
 	if (WheelMesh.Succeeded()) {BR_Wheel->SetStaticMesh((WheelMesh.Object));}
 
 	BR_Wheel->SetupAttachment(Chassis);
-	BR_Wheel->SetRelativeLocation(FVector(55.0f,40.0f, -40.0f));
+	BR_Wheel->SetRelativeLocation(FVector(60.0f,40.0f, -40.0f));
 	BR_Wheel->SetRelativeScale3D(FVector(0.6725f, 0.27f, 0.117f));
 	BR_Wheel->SetRelativeRotation(FRotator(90.0f,0.0f,0.0f));
 	
@@ -77,14 +95,22 @@ ACarPawn::ACarPawn()
 	BR_Wheel->SetCollisionEnabled((ECollisionEnabled::QueryAndPhysics));
 
 	BR_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("BackRightConstraint"));
+	BR_Constraint->SetupAttachment(Chassis);
 	BR_Constraint ->SetConstrainedComponents(Chassis, NAME_None, BR_Wheel, NAME_None);
+	BR_Constraint->SetRelativeLocation(FVector(50.0f,40.0f,-40.0f));
+
+	BR_Constraint->SetLinearPositionDrive(true, true, true);
+	BR_Constraint->SetLinearDriveParams(500.0f, 50.0f,0.0f);
+	BR_Constraint->SetAngularSwing1Limit(ACM_Locked,0.0f);
+	BR_Constraint->SetAngularSwing2Limit(ACM_Free,0.0f);
+	BR_Constraint->SetAngularTwistLimit(ACM_Locked,0.0f);
 	
 	//Initialize Back Left Wheel
 	BL_Wheel = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BackLeftWheel"));
 	if (WheelMesh.Succeeded()) {BL_Wheel->SetStaticMesh((WheelMesh.Object));}
 
 	BL_Wheel->SetupAttachment(Chassis);
-	BL_Wheel->SetRelativeLocation(FVector(-55.0f,40.0f, -40.0f));
+	BL_Wheel->SetRelativeLocation(FVector(-60.0f,40.0f, -40.0f));
 	BL_Wheel->SetRelativeScale3D(FVector(0.6725f, 0.27f, 0.117f));
 	BL_Wheel->SetRelativeRotation(FRotator(90.0f,0.0f,0.0f));
 
@@ -92,7 +118,15 @@ ACarPawn::ACarPawn()
 	BL_Wheel->SetCollisionEnabled((ECollisionEnabled::QueryAndPhysics));
 
 	BL_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("BackLeftConstraint"));
+	BL_Constraint->SetupAttachment(Chassis);
 	BL_Constraint ->SetConstrainedComponents(Chassis, NAME_None, BL_Wheel, NAME_None);
+	BL_Constraint->SetRelativeLocation(FVector(-50.0f,40.0f,-40.0f));
+
+	BL_Constraint->SetLinearPositionDrive(true, true, true);
+	BL_Constraint->SetLinearDriveParams(500.0f, 50.0f,0.0f);
+	BL_Constraint->SetAngularSwing1Limit(ACM_Locked,0.0f);
+	BL_Constraint->SetAngularSwing2Limit(ACM_Free,0.0f);
+	BL_Constraint->SetAngularTwistLimit(ACM_Locked,0.0f);
 
 }
 
@@ -106,14 +140,27 @@ void ACarPawn::BeginPlay()
 // Called every frame
 void ACarPawn::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
 
+	float RotationSpeed = GetInputAxisValue("MoveForward") * 100.0f;
+	FL_Wheel->AddLocalRotation(FRotator(RotationSpeed* DeltaTime, 0.0f, 0.0f));
+	FR_Wheel->AddLocalRotation(FRotator(RotationSpeed* DeltaTime, 0.0f, 0.0f));
+	BL_Wheel->AddLocalRotation(FRotator(RotationSpeed* DeltaTime, 0.0f, 0.0f));
+	BR_Wheel->AddLocalRotation(FRotator(RotationSpeed* DeltaTime, 0.0f, 0.0f));
 }
 
 // Called to bind functionality to input
 void ACarPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAxis("MoveForward", this, &ACarPawn::MoveForward);
+
+}
+
+void ACarPawn::MoveForward(float Value)
+{
+
+	FVector Force = Chassis->GetForwardVector() * Value * 100000.0f;
+	BL_Wheel->AddForce(Force);
+	BR_Wheel->AddForce(Force);
 }
 
