@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputActionValue.h"
 #include "CarPawn.generated.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogMyCar, Log, All);
@@ -46,7 +49,14 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UPhysicsConstraintComponent* BR_Constraint;
 
-	void MoveForward(float Value);
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Input")
+	UInputMappingContext* VehicleMappingContext;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Input")
+	UInputAction* MoveForwardAction;
+
+	UFUNCTION()
+	void MoveForward(const FInputActionValue& Value);
   
 protected:
 	// Called when the game starts or when spawned

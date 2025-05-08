@@ -2,6 +2,8 @@
 
 
 #include "CarPawn.h"
+
+#include "Kismet/GameplayStatics.h"
 DEFINE_LOG_CATEGORY(LogMyCar);
 
 
@@ -25,7 +27,7 @@ ACarPawn::ACarPawn()
 		Chassis->SetSimulatePhysics(true);
 		Chassis->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		Chassis->SetVisibility(true);
-		Chassis->SetCenterOfMass(FVector(50,-50, 30));
+		Chassis->SetCenterOfMass(FVector(0,0, -50));
 
 		static ConstructorHelpers::FObjectFinder<UStaticMesh> WheelMesh(TEXT("StaticMesh'/Engine/Content/BasicShapes/Cylinder.Cylinder'"));
 	}
@@ -50,8 +52,9 @@ ACarPawn::ACarPawn()
 
 	FL_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("FrontLeftConstraint"));
 	FL_Constraint->SetupAttachment(Chassis);
-	FL_Constraint->SetConstrainedComponents(Chassis, NAME_None, FL_Wheel, NAME_None);
 	FL_Constraint->SetRelativeLocation(FVector(-45.0f,-40.0f,-40.0f));
+	FL_Constraint->SetConstrainedComponents(Chassis, NAME_None, FL_Wheel, NAME_None);
+	
 
 	FL_Constraint->SetLinearPositionDrive(true, true, true);
 	FL_Constraint->SetLinearDriveParams(500.0f, 50.0f,0.0f);
@@ -73,8 +76,8 @@ ACarPawn::ACarPawn()
 
 	FR_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("FrontRightConstraint"));
 	FR_Constraint->SetupAttachment(Chassis);
-	FR_Constraint->SetConstrainedComponents(Chassis, NAME_None, FR_Wheel, NAME_None);
 	FR_Constraint->SetRelativeLocation(FVector(50.0f,-40.0f, -40.0f));
+	FR_Constraint->SetConstrainedComponents(Chassis, NAME_None, FR_Wheel, NAME_None);
 
 	FR_Constraint->SetLinearPositionDrive(true, true, true);
 	FR_Constraint->SetLinearDriveParams(500.0f, 50.0f,0.0f);
@@ -96,8 +99,8 @@ ACarPawn::ACarPawn()
 
 	BR_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("BackRightConstraint"));
 	BR_Constraint->SetupAttachment(Chassis);
-	BR_Constraint ->SetConstrainedComponents(Chassis, NAME_None, BR_Wheel, NAME_None);
 	BR_Constraint->SetRelativeLocation(FVector(50.0f,40.0f,-40.0f));
+	BR_Constraint ->SetConstrainedComponents(Chassis, NAME_None, BR_Wheel, NAME_None);
 
 	BR_Constraint->SetLinearPositionDrive(true, true, true);
 	BR_Constraint->SetLinearDriveParams(500.0f, 50.0f,0.0f);
@@ -119,8 +122,9 @@ ACarPawn::ACarPawn()
 
 	BL_Constraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("BackLeftConstraint"));
 	BL_Constraint->SetupAttachment(Chassis);
-	BL_Constraint ->SetConstrainedComponents(Chassis, NAME_None, BL_Wheel, NAME_None);
 	BL_Constraint->SetRelativeLocation(FVector(-50.0f,40.0f,-40.0f));
+	BL_Constraint ->SetConstrainedComponents(Chassis, NAME_None, BL_Wheel, NAME_None);
+
 
 	BL_Constraint->SetLinearPositionDrive(true, true, true);
 	BL_Constraint->SetLinearDriveParams(500.0f, 50.0f,0.0f);
@@ -134,6 +138,18 @@ ACarPawn::ACarPawn()
 void ACarPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+	
+			Subsystem->AddMappingContext(VehicleMappingContext, 0 );
+			
+		}
+		
+	}
 	
 }
 
@@ -152,15 +168,32 @@ void ACarPawn::Tick(float DeltaTime)
 void ACarPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &ACarPawn::MoveForward);
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	if(!MoveForwardAction)
+	{
+
+		UE_LOG(LogTemp, Error, TEXT("MoveForwardAction not assigned"));
+		
+	}
+	
+	
+	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	
+	EnhancedInputComponent->BindAction(MoveForwardAction,ETriggerEvent::Triggered,this,&ACarPawn::MoveForward);
+		
 
 }
 
-void ACarPawn::MoveForward(float Value)
+void ACarPawn::MoveForward(const FInputActionValue& Value)
 {
 
-	FVector Force = Chassis->GetForwardVector() * Value * 100000.0f;
+	float InputValue = Value.Get<float>();
+	FVector Force = Chassis->GetForwardVector() * InputValue * 100000.0f;
 	BL_Wheel->AddForce(Force);
 	BR_Wheel->AddForce(Force);
+	FR_Wheel->AddForce(Force);
+	BR_Wheel->AddForce(Force);
+	
 }
 
